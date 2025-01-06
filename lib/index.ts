@@ -9,18 +9,13 @@ export type RouteTypes<Paths extends string> = {
 }
 
 /** Return only routes that define method M */
-type RoutesWithMethod<
-  Paths extends string,
-  T extends RouteTypes<Paths>,
-  M extends string,
-> = {
+type RoutesWithMethod<T extends RouteTypes<string>, M extends string> = {
   [K in keyof T]: M extends keyof T[K] ? K : never
 }[keyof T]
 
 /** Merge ky's options with typed json/searchParams from T[route][method]. */
 type MethodOptions<
-  Paths extends string,
-  T extends RouteTypes<Paths>,
+  T extends RouteTypes<string>,
   R extends keyof T,
   M extends keyof T[R],
 > = Omit<KyOptions, "method" | "json" | "searchParams"> &
@@ -36,29 +31,29 @@ export interface TypedKyInstance<
   Paths extends string,
   T extends RouteTypes<Paths>,
 > {
-  get<R extends RoutesWithMethod<Paths, T, "GET">>(
+  get<R extends RoutesWithMethod<T, "GET">>(
     route: R,
-    options?: MethodOptions<Paths, T, R, "GET">,
+    options?: MethodOptions<T, R, "GET">,
   ): Promise<T[R]["GET"]["responseJson"]>
 
-  post<R extends RoutesWithMethod<Paths, T, "POST">>(
+  post<R extends RoutesWithMethod<T, "POST">>(
     route: R,
-    options?: MethodOptions<Paths, T, R, "POST">,
+    options?: MethodOptions<T, R, "POST">,
   ): Promise<T[R]["POST"]["responseJson"]>
 
-  put<R extends RoutesWithMethod<Paths, T, "PUT">>(
+  put<R extends RoutesWithMethod<T, "PUT">>(
     route: R,
-    options?: MethodOptions<Paths, T, R, "PUT">,
+    options?: MethodOptions<T, R, "PUT">,
   ): Promise<T[R]["PUT"]["responseJson"]>
 
-  patch<R extends RoutesWithMethod<Paths, T, "PATCH">>(
+  patch<R extends RoutesWithMethod<T, "PATCH">>(
     route: R,
-    options?: MethodOptions<Paths, T, R, "PATCH">,
+    options?: MethodOptions<T, R, "PATCH">,
   ): Promise<T[R]["PATCH"]["responseJson"]>
 
-  delete<R extends RoutesWithMethod<Paths, T, "DELETE">>(
+  delete<R extends RoutesWithMethod<T, "DELETE">>(
     route: R,
-    options?: MethodOptions<Paths, T, R, "DELETE">,
+    options?: MethodOptions<T, R, "DELETE">,
   ): Promise<T[R]["DELETE"]["responseJson"]>
 }
 
