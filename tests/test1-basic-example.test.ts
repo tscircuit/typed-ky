@@ -2,6 +2,7 @@ import { test, expect } from "bun:test"
 import { getExampleServer } from "./fixtures/example-server"
 import { createTypedKy } from "../lib"
 import type { ExampleApiRoutes } from "./fixtures/example-server"
+import { expectType } from "ts-expect"
 
 test("basic example with types", async () => {
   const testServerUrl = await getExampleServer()
@@ -18,7 +19,8 @@ test("basic example with types", async () => {
 
   // Get the thing we just created
   const getResponse = await api.get("things/get", {
-    searchParams: { thing_id: getResponse.thing.thing_id },
+    searchParams: { thing_id: "1" },
   })
-  expect(getResponse.thing).toEqual(getResponse.thing)
+
+  expectType<{ thing: { name: string; thing_id: string } }>(getResponse)
 })
