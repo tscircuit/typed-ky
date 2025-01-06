@@ -11,12 +11,11 @@
     "@types/bun": "latest",
     "get-port": "^7.1.0",
     "ts-expect": "^1.3.0",
-    "tsup": "^8.3.5"
+    "tsup": "^8.3.5",
+    "ky": "^1.7.4"
   },
   "peerDependencies": {
-    "typescript": "^5.7.2"
-  },
-  "dependencies": {
-    "ky": "^1.7.4"
+    "typescript": "^5.7.2",
+    "ky": "*"
   }
 }
