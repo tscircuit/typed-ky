@@ -1,7 +1,11 @@
 {
   "name": "typed-ky",
-  "module": "index.ts",
+  "main": "dist/index.js",
   "type": "module",
+  "version": "0.0.1",
+  "scripts": {
+    "build": "tsup lib/index.ts --dts --format esm"
+  },
   "devDependencies": {
     "@biomejs/biome": "^1.9.4",
     "@types/bun": "latest",
