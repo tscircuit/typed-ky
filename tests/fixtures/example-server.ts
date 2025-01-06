@@ -1,5 +1,6 @@
 import { afterEach } from "bun:test"
 import getPort from "get-port"
+import type { RouteTypes } from "../../lib"
 
 export const getExampleServer = async () => {
   const things: { name: string; thing_id: string }[] = []
@@ -55,3 +56,7 @@ export interface ExampleApiRoutes {
     }
   }
 }
+
+// ----------- TYPE TEST ----------------
+const fn = <T extends string>(a: RouteTypes<T>) => {}
+fn(null as any as ExampleApiRoutes)

@@ -2,24 +2,25 @@ import type { Options as KyOptions } from "ky"
 import ky from "ky"
 
 /** Shape of your route definitions */
-export interface RouteTypes {
-  [route: string]: {
-    [method: string]: {
-      requestJson?: any
-      searchParams?: Record<string, any>
-      responseJson: any
-    }
-  }
+export type RouteTypes<Paths extends string> = {
+  [path in Paths]: Partial<
+    Record<"GET" | "POST" | "PUT" | "DELETE" | "PATCH", any>
+  >
 }
 
 /** Return only routes that define method M */
-type RoutesWithMethod<T extends RouteTypes, M extends string> = {
+type RoutesWithMethod<
+  Paths extends string,
+  T extends RouteTypes<Paths>,
+  M extends string,
+> = {
   [K in keyof T]: M extends keyof T[K] ? K : never
 }[keyof T]
 
 /** Merge ky's options with typed json/searchParams from T[route][method]. */
 type MethodOptions<
-  T extends RouteTypes,
+  Paths extends string,
+  T extends RouteTypes<Paths>,
   R extends keyof T,
   M extends keyof T[R],
 > = Omit<KyOptions, "method" | "json" | "searchParams"> &
@@ -31,53 +32,57 @@ type MethodOptions<
     : { searchParams?: undefined })
 
 /** The main typed-ky interface */
-export interface TypedKyInstance<T extends RouteTypes> {
-  get<R extends RoutesWithMethod<T, "GET">>(
+export interface TypedKyInstance<
+  Paths extends string,
+  T extends RouteTypes<Paths>,
+> {
+  get<R extends RoutesWithMethod<Paths, T, "GET">>(
     route: R,
-    options?: MethodOptions<T, R, "GET">,
+    options?: MethodOptions<Paths, T, R, "GET">,
   ): Promise<T[R]["GET"]["responseJson"]>
 
-  post<R extends RoutesWithMethod<T, "POST">>(
+  post<R extends RoutesWithMethod<Paths, T, "POST">>(
     route: R,
-    options?: MethodOptions<T, R, "POST">,
+    options?: MethodOptions<Paths, T, R, "POST">,
   ): Promise<T[R]["POST"]["responseJson"]>
 
-  put<R extends RoutesWithMethod<T, "PUT">>(
+  put<R extends RoutesWithMethod<Paths, T, "PUT">>(
     route: R,
-    options?: MethodOptions<T, R, "PUT">,
+    options?: MethodOptions<Paths, T, R, "PUT">,
   ): Promise<T[R]["PUT"]["responseJson"]>
 
-  patch<R extends RoutesWithMethod<T, "PATCH">>(
+  patch<R extends RoutesWithMethod<Paths, T, "PATCH">>(
     route: R,
-    options?: MethodOptions<T, R, "PATCH">,
+    options?: MethodOptions<Paths, T, R, "PATCH">,
   ): Promise<T[R]["PATCH"]["responseJson"]>
 
-  delete<R extends RoutesWithMethod<T, "DELETE">>(
+  delete<R extends RoutesWithMethod<Paths, T, "DELETE">>(
     route: R,
-    options?: MethodOptions<T, R, "DELETE">,
+    options?: MethodOptions<Paths, T, R, "DELETE">,
   ): Promise<T[R]["DELETE"]["responseJson"]>
 }
 
-export function createTypedKy<T extends RouteTypes>(
-  prefixUrl: string,
-): TypedKyInstance<T> {
-  const kyInstance = ky.create({ prefixUrl })
+export function createTypedKy<
+  Paths extends string,
+  T extends RouteTypes<Paths>,
+>(kyOptions: KyOptions): TypedKyInstance<Paths, T> {
+  const kyInstance = ky.create(kyOptions)
 
   return {
     get(route, options) {
-      return kyInstance.get(route, options).json()
+      return kyInstance.get(route as string, options as any).json()
     },
     post(route, options) {
-      return kyInstance.post(route, options).json()
+      return kyInstance.post(route as string, options as any).json()
     },
     put(route, options) {
-      return kyInstance.put(route, options).json()
+      return kyInstance.put(route as string, options as any).json()
     },
     patch(route, options) {
-      return kyInstance.patch(route, options).json()
+      return kyInstance.patch(route as string, options as any).json()
     },
     delete(route, options) {
-      return kyInstance.delete(route, options).json()
+      return kyInstance.delete(route as string, options as any).json()
     },
   }
 }

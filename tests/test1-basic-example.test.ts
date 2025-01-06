@@ -5,7 +5,9 @@ import type { ExampleApiRoutes } from "./fixtures/example-server"
 
 test("basic example with types", async () => {
   const testServerUrl = await getExampleServer()
-  const api = createTypedKy<ExampleApiRoutes>(testServerUrl)
+  const api = createTypedKy<keyof ExampleApiRoutes, ExampleApiRoutes>({
+    prefixUrl: testServerUrl,
+  })
 
   // Add a new thing
   const addResponse = await api.post("things/add", {
