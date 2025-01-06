@@ -46,7 +46,7 @@ export interface ExampleApiRoutes {
   "things/add": {
     POST: {
       requestJson: { name: string }
-      responseJson: { thing: { name: string; thing_id: string } }
+      responseJson: { thing_count: number }
     }
   }
   "things/get": {

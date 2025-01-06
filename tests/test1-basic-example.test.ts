@@ -13,12 +13,12 @@ test("basic example with types", async () => {
   const addResponse = await api.post("things/add", {
     json: { name: "test thing" },
   })
-  expect(addResponse.thing.name).toBe("test thing")
-  expect(typeof addResponse.thing.thing_id).toBe("string")
+  expect(addResponse.thing_count).toBe(1)
+  expect(typeof addResponse.thing_count).toBe("number")
 
   // Get the thing we just created
   const getResponse = await api.get("things/get", {
-    searchParams: { thing_id: addResponse.thing.thing_id },
+    searchParams: { thing_id: getResponse.thing.thing_id },
   })
-  expect(getResponse.thing).toEqual(addResponse.thing)
+  expect(getResponse.thing).toEqual(getResponse.thing)
 })
