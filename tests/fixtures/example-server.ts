@@ -16,10 +16,10 @@ export const getExampleServer = async () => {
         const body = await req.json()
         const thing = {
           name: body.name,
-          thing_id: crypto.randomUUID(),
+          thing_id: (things.length + 1).toString(),
         }
         things.push(thing)
-        return Response.json({ thing })
+        return Response.json({ thing_count: things.length })
       }
 
       if (path === "things/get" && req.method === "GET") {

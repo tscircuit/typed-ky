@@ -39,27 +39,27 @@ export interface TypedKyInstance<
   get<R extends RoutesWithMethod<Paths, T, "GET">>(
     route: R,
     options?: MethodOptions<Paths, T, R, "GET">,
-  ): Promise<T[R]["GET"]["responseJson"]>
+  ): { json: () => Promise<T[R]["GET"]["responseJson"]> }
 
   post<R extends RoutesWithMethod<Paths, T, "POST">>(
     route: R,
     options?: MethodOptions<Paths, T, R, "POST">,
-  ): Promise<T[R]["POST"]["responseJson"]>
+  ): { json: () => Promise<T[R]["POST"]["responseJson"]> }
 
   put<R extends RoutesWithMethod<Paths, T, "PUT">>(
     route: R,
     options?: MethodOptions<Paths, T, R, "PUT">,
-  ): Promise<T[R]["PUT"]["responseJson"]>
+  ): { json: () => Promise<T[R]["PUT"]["responseJson"]> }
 
   patch<R extends RoutesWithMethod<Paths, T, "PATCH">>(
     route: R,
     options?: MethodOptions<Paths, T, R, "PATCH">,
-  ): Promise<T[R]["PATCH"]["responseJson"]>
+  ): { json: () => Promise<T[R]["PATCH"]["responseJson"]> }
 
   delete<R extends RoutesWithMethod<Paths, T, "DELETE">>(
     route: R,
     options?: MethodOptions<Paths, T, R, "DELETE">,
-  ): Promise<T[R]["DELETE"]["responseJson"]>
+  ): { json: () => Promise<T[R]["DELETE"]["responseJson"]> }
 }
 
 export function createTypedKy<
@@ -70,19 +70,19 @@ export function createTypedKy<
 
   return {
     get(route, options) {
-      return kyInstance.get(route as string, options as any).json()
+      return kyInstance.get(route as string, options as any)
     },
     post(route, options) {
-      return kyInstance.post(route as string, options as any).json()
+      return kyInstance.post(route as string, options as any)
     },
     put(route, options) {
-      return kyInstance.put(route as string, options as any).json()
+      return kyInstance.put(route as string, options as any)
     },
     patch(route, options) {
-      return kyInstance.patch(route as string, options as any).json()
+      return kyInstance.patch(route as string, options as any)
     },
     delete(route, options) {
-      return kyInstance.delete(route as string, options as any).json()
+      return kyInstance.delete(route as string, options as any)
     },
   }
 }
